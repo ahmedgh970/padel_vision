@@ -20,5 +20,4 @@ Thumbs.db
 
 notebooks
 yolo*
-experiments/outputs
-experiments/prep_videos
+experiments
