@@ -20,6 +20,8 @@ class Detector:
         """
         results = self.pose_model(image)
         all_keypoints = []
+        # YOLO returns list of results per batch;
+        # use first because we are applying the detector on a single image
         r = results[0]
         if hasattr(r, 'keypoints') and r.keypoints is not None:
             kpts_attr = r.keypoints.xy
@@ -32,31 +34,43 @@ class Detector:
                 all_keypoints.append(person_kpts)
         return all_keypoints
 
-    def detect_ball(self, image: np.ndarray):
+    def detect_ball(self, image: np.ndarray, conf_threshold: float = 0.25):
         """
-        Detect the padel ball and return its center (x, y), or None if no sports ball detected.
+        Detect the padel ball and return its center (x, y), or None if no valid sports ball detected.
+        Selects the detection with the highest confidence above a threshold, and prefers smaller boxes to avoid shadows.
+        :param image: BGR image
+        :param conf_threshold: Minimum confidence to consider
         """
         results = self.ball_model(image)
         if not results:
             return None
-        # YOLO returns list of results per batch; use first because we are using a single image 
         r = results[0]
-        # Extract boxes and classes
+        # Extract tensors for boxes, classes, and confidences
         coords_tensor = r.boxes.xyxy
         cls_tensor = r.boxes.cls
+        conf_tensor = r.boxes.conf
         # Convert to numpy arrays
         if hasattr(coords_tensor, 'cpu'):
             coords_np = coords_tensor.cpu().numpy()
             cls_np = cls_tensor.cpu().numpy()
+            conf_np = conf_tensor.cpu().numpy()
         else:
             coords_np = np.array(coords_tensor)
             cls_np = np.array(cls_tensor)
-        # Filter for sports ball class
-        for coords, cls_id in zip(coords_np, cls_np):
-            # TODO: select the ball from the detected onces according to ? 
-            if int(cls_id) == int(self.ball_class):
+            conf_np = np.array(conf_tensor)
+        # Collect valid detections
+        valid = []
+        for coords, cls_id, conf in zip(coords_np, cls_np, conf_np):
+            if int(cls_id) == int(self.ball_class) and conf >= conf_threshold:
                 x1, y1, x2, y2 = coords
-                cx = float((x1 + x2) / 2)
-                cy = float((y1 + y2) / 2)
-                return (cx, cy)
-        return None
+                area = (x2 - x1) * (y2 - y1)
+                # We use negative area so that smaller boxes rank higher when confidences tie
+                valid.append((conf, -area, coords))
+        if not valid:
+            return None
+        # Choose detection with highest confidence, then smallest area
+        _, _, best_coords = max(valid, key=lambda x: (x[0], x[1]))
+        x1, y1, x2, y2 = best_coords
+        cx = float((x1 + x2) / 2)
+        cy = float((y1 + y2) / 2)
+        return (cx, cy)
