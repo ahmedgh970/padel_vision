@@ -1,2 +1,2 @@
 from .detector import Detector
-from .video_processor import process_video
+from .detection_pipeline import process_input
