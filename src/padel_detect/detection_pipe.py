@@ -10,7 +10,7 @@ def process_input(path: str,
     """
     Process either an image or a video file for padel detection using normalized coordinates.
     Returns a dict mapping frame_id (or 0 for image) to detection dict or empty dict.
-    Detection dict contains 'player_id', 'keypoints', and 'ball'->'position'.
+    Detection dict contains 'player_id', 'keypoints', and 'ball'.
     :param proximity_thresh: maximum normalized distance (0-1) to accept a wrist-ball match
     """
     # Determine if input is image by extension
@@ -33,7 +33,7 @@ def process_input(path: str,
             return {
                 'player_id': idx,
                 'keypoints': kpts.tolist(),
-                'ball': {'position': ball_pos}
+                'ball': ball_pos,
             }
         return {}
 
