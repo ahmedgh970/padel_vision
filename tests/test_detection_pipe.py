@@ -66,9 +66,9 @@ def test_process_input_video_no_interaction():
 
 def test_process_input_video_with_interaction():
     # One player with keypoints, ball near left wrist
-    kpts = np.zeros((12,2))
-    kpts[10] = [2,2]  # left wrist
-    kpts[11] = [10,10]  # right wrist placeholder
+    kpts = np.zeros((17,2))
+    kpts[9] = [2,2]  # left wrist
+    kpts[10] = [10,10]  # right wrist placeholder
     det = DummyDetector([[kpts], []], [(3,3), None])
     res = process_input('video.mp4', det, proximity_thresh=2)
     assert 0 in res and res[0]
@@ -82,9 +82,9 @@ def test_process_input_image(tmp_path):
     dummy_img = np.zeros((5,5,3), dtype=np.uint8)
     cv2.imwrite(str(img_path), dummy_img)
     # Detector returns one detection
-    kpts = np.zeros((12,2))
-    kpts[10] = [1,1]
-    kpts[11] = [10,10]
+    kpts = np.zeros((17,2))
+    kpts[9] = [1,1]
+    kpts[10] = [10,10]
     det = DummyDetector([[kpts]], [(1,1)])
     res = process_input(str(img_path), det, proximity_thresh=1)
     assert res == {0: {'player_id': 0, 'keypoints': kpts.tolist(), 'ball': (1,1)}}

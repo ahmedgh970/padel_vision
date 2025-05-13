@@ -10,7 +10,7 @@ class DummyPoseModel:
         class Result:
             def __init__(self):
                 # Simulate two people, each with 2 keypoints
-                self.keypoints = type('kp', (), {'xy': np.array([[[1,2],[3,4]], [[5,6],[7,8]]])})
+                self.keypoints = type('kp', (), {'xyn': np.array([[[1,2],[3,4]], [[5,6],[7,8]]])})
         return [Result()]
 
 class DummyBallModel:
@@ -22,7 +22,7 @@ class DummyBallModel:
             def __init__(self):
                 boxes = type('boxes', (), {})()
                 # One box at [0,0,2,2]
-                boxes.xyxy = np.array([[0, 0, 2, 2]])
+                boxes.xyxyn = np.array([[0, 0, 2, 2]])
                 boxes.cls = np.array([32])
                 boxes.conf = np.array([0.9])
                 self.boxes = boxes
@@ -62,7 +62,7 @@ def test_detect_ball_low_confidence(monkeypatch):
             class Result:
                 def __init__(self):
                     boxes = type('boxes', (), {})()
-                    boxes.xyxy = np.array([[0, 0, 2, 2]])
+                    boxes.xyxyn = np.array([[0, 0, 2, 2]])
                     boxes.cls = np.array([32])
                     boxes.conf = np.array([0.1])
                     self.boxes = boxes
