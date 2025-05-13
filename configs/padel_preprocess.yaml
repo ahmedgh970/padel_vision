@@ -1,7 +1,9 @@
 input:
   path: experiments/raw_videos/test.mp4
+  
 output:
   path: experiments/prep_videos/test_prep.mp4
+
 preprocess:
   num_frames: 10
   start_sec: 0.0

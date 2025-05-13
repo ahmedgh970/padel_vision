@@ -30,7 +30,8 @@ def cli(cfg: DictConfig):
     # Step 2: Detection
     detector = Detector(
         pose_model_path=cfg.models.pose,
-        ball_model_path=cfg.models.ball
+        ball_model_path=cfg.models.ball,
+        conf_threshold=cfg.models.confidence,
     )
     detections = process_input(
         path=work_input,

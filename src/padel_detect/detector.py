@@ -4,14 +4,19 @@ import numpy as np
 class Detector:
     def __init__(self,
                  pose_model_path: str = "yolo11n-pose.pt",
-                 ball_model_path: str = "yolo11n.pt"):
+                 ball_model_path: str = "yolo11n.pt",
+                 conf_threshold: float = 0.25):
         """
         Initialize the Detector with pretrained YOLO pose and ball detection models.
+        :param pose_model_path: Path to the YOLO model for pose detection
+        :param ball_model_path: Path to the YOLO model for ball detection
+        :param conf_threshold: Minimum confidence to consider
         """
         self.pose_model = YOLO(pose_model_path)
         self.ball_model = YOLO(ball_model_path)
         # COCO class ID for 'sports ball'
         self.ball_class = 32
+        self.conf_threshold = conf_threshold
 
     def detect_keypoints(self, image: np.ndarray):
         """
@@ -34,12 +39,10 @@ class Detector:
                 all_keypoints.append(person_kpts)
         return all_keypoints
 
-    def detect_ball(self, image: np.ndarray, conf_threshold: float = 0.25):
+    def detect_ball(self, image: np.ndarray):
         """
         Detect the padel ball and return its center (x, y), or None if no valid sports ball detected.
         Selects the detection with the highest confidence above a threshold, and prefers smaller boxes to avoid shadows.
-        :param image: BGR image
-        :param conf_threshold: Minimum confidence to consider
         """
         results = self.ball_model(image)
         if not results:
@@ -61,7 +64,7 @@ class Detector:
         # Collect valid detections
         valid = []
         for coords, cls_id, conf in zip(coords_np, cls_np, conf_np):
-            if int(cls_id) == int(self.ball_class) and conf >= conf_threshold:
+            if int(cls_id) == int(self.ball_class) and conf >= self.conf_threshold:
                 x1, y1, x2, y2 = coords
                 area = (x2 - x1) * (y2 - y1)
                 # We use negative area so that smaller boxes rank higher when confidences tie
