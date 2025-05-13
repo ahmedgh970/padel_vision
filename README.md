@@ -1,3 +1,6 @@
+# Padel Vision
+![padel Vision](./assets/)
+
 # Project Structure
 ```text
 padel_vision/                 # Root project directory
@@ -24,3 +27,21 @@ padel_vision/                 # Root project directory
 ├─ README.md                  # Overview and usage
 └─ .gitignore                 # Git ignore rules
 ```
+
+# Setup
+#### 1. Clone this repository.
+#### 2. Setup virtual environment.
+#### 3. Install packages in editable mode.
+```
+conda create -n python=3.10 padelvis
+conda activate padelvis
+pip install -e .
+```
+
+# Inference
+At the root of this repo, edit the config files configs/ accordingly and run:
+````
+padel-preprocess --config-dir configs/   #-- for video preprocessing 
+padel-detect --config-dir configs/       #-- for keypoints and ball detection from video/image
+padel-pipe --config-dir configs/         #-- for the full pipeline (prep detect plot)
+````
