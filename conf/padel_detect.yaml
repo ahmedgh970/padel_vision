@@ -1,0 +1,9 @@
+input:
+  path: videos/my_match.mp4
+output:
+  json: detections.json
+threshold: 50.0
+
+models:
+  pose: yolov11-pose.pt
+  ball: yolov11.pt

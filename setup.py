@@ -13,12 +13,15 @@ setup(
         'opencv-python',
         'numpy',
         'pytest',
-        'opencv-python'
+        'opencv-python',
+        'hydra-core',
+        'omegaconf',
     ],
     entry_points={
         'console_scripts': [
-            'padel-detect=padel_detection.main:cli',
-            'padel-preprocess=video_preprocessor.main:cli'
+            'padel-detect=padel_detect.main:cli',
+            'padel-preprocess=padel_preprocess.main:cli',
+            'padel-pipe=padel_pipe.main:cli'
         ],
     },
 )

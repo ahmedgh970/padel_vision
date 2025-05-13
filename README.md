@@ -1,21 +1,26 @@
 # Project Structure
 ```text
-padel_stats/                  # Root project directory
+padel_vision/                 # Root project directory
 ├─ src/                       # Source code directory
-│  ├─ padel_detection/        # Detection modules package
-│  │  ├─ __init__.py          # Expose Detector and process_video
-│  │  ├─ detector.py          # Pose & ball detection wrappers
-│  │  ├─ video_processor.py   # Video frame processing logic
-│  │  └─ main.py              # CLI for detection
-│  └─ video_preprocessor/     # Video preprocessing package
-│     ├─ __init__.py          # Expose preprocessing functions
-│     ├─ preprocessor.py      # Frame sampling logic
-│     └─ main.py              # CLI for preprocessing
+│  ├─ padel_detect/           # Package for keypoints and ball detection
+│  │  ├─ __init__.py          
+│  │  ├─ detector.py          
+│  │  ├─ detection_pipe.py    
+│  │  └─ main.py              
+│  ├─ padel_preprocess/       # Package for video preprocessing
+│  │  ├─ __init__.py          
+│  │  ├─ preprocessor.py      
+│  │  └─ main.py              
+│  └─ padel_pipe/             # Package for sampling, detection, export, annotating video
+│    ├─ __init__.py          
+│    ├─ annotate.py 
+│    └─ main.py        
 ├─ tests/                     # Unit tests
 │  ├─ test_detector.py
-│  └─ test_video_processor.py
+│  ├─ test_detection_pipe.py         
+│  ├─ test_preprocessor.py    
+│  └─ test_annotate.py 
 ├─ setup.py                   # Package installation and entry points
-├─ requirements.txt           # Python dependencies
 ├─ README.md                  # Overview and usage
 └─ .gitignore                 # Git ignore rules
 ```

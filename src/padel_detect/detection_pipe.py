@@ -1,7 +1,7 @@
+import os
 import cv2
 import numpy as np
-from padel_detection.detector import Detector
-import os
+from padel_detect.detector import Detector
 
 
 def process_input(path: str,
@@ -23,8 +23,6 @@ def process_input(path: str,
             raise ValueError(f"Cannot read image file {path}")
         keypoints_list = detector.detect_keypoints(img)
         ball_pos = detector.detect_ball(img)
-        print(keypoints_list)
-        print(ball_pos)
         detection = {}
         if ball_pos and keypoints_list:
             for idx, kpts in enumerate(keypoints_list):
@@ -38,7 +36,7 @@ def process_input(path: str,
                     detection = {
                         'player_id': idx,
                         'keypoints': kpts.tolist(),
-                        'ball': {'position': ball_pos}
+                        'ball': ball_pos,
                     }
                     break
         return {0: detection}
@@ -67,7 +65,7 @@ def process_input(path: str,
                     detection = {
                         'player_id': idx,
                         'keypoints': kpts.tolist(),
-                        'ball': {'position': ball_pos}
+                        'ball': ball_pos,
                     }
                     break
         results[frame_id] = detection

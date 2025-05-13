@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 import pytest
-from video_preprocessor.preprocessor import sample_frames_to_video
+from padel_preprocess import sample_frames_to_video
 
 # Dummy VideoCapture to simulate frames
 class DummyCapture:
