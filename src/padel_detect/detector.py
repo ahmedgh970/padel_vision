@@ -5,18 +5,18 @@ class Detector:
     def __init__(self,
                  pose_model_path: str = "yolo11n-pose.pt",
                  ball_model_path: str = "yolo11n.pt",
-                 conf_threshold: float = 0.25):
+                 confidence_thresh: float = 0.25):
         """
         Initialize the Detector with pretrained YOLO pose and ball detection models.
         :param pose_model_path: Path to the YOLO model for pose detection
         :param ball_model_path: Path to the YOLO model for ball detection
-        :param conf_threshold: Minimum confidence to consider
+        :param confidence_thresh: Minimum confidence to consider
         """
         self.pose_model = YOLO(pose_model_path)
         self.ball_model = YOLO(ball_model_path)
         # COCO class ID for 'sports ball'
         self.ball_class = 32
-        self.conf_threshold = conf_threshold
+        self.confidence_thresh = confidence_thresh
 
     def detect_keypoints(self, image: np.ndarray):
         """
@@ -29,7 +29,7 @@ class Detector:
         # use first because we are applying the detector on a single image
         r = results[0]
         if hasattr(r, 'keypoints') and r.keypoints is not None:
-            kpts_attr = r.keypoints.xy
+            kpts_attr = r.keypoints.xyn
             # Handle Tensor or NumPy array
             if hasattr(kpts_attr, 'cpu'):
                 kpts = kpts_attr.cpu().numpy()
@@ -49,7 +49,7 @@ class Detector:
             return None
         r = results[0]
         # Extract tensors for boxes, classes, and confidences
-        coords_tensor = r.boxes.xyxy
+        coords_tensor = r.boxes.xyxyn
         cls_tensor = r.boxes.cls
         conf_tensor = r.boxes.conf
         # Convert to numpy arrays
@@ -64,7 +64,7 @@ class Detector:
         # Collect valid detections
         valid = []
         for coords, cls_id, conf in zip(coords_np, cls_np, conf_np):
-            if int(cls_id) == int(self.ball_class) and conf >= self.conf_threshold:
+            if int(cls_id) == int(self.ball_class) and conf >= self.confidence_thresh:
                 x1, y1, x2, y2 = coords
                 area = (x2 - x1) * (y2 - y1)
                 # We use negative area so that smaller boxes rank higher when confidences tie

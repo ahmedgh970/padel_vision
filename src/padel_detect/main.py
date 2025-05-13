@@ -10,12 +10,12 @@ def cli(cfg: DictConfig):
     detector = Detector(
         pose_model_path=cfg.models.pose,
         ball_model_path=cfg.models.ball,
-        conf_threshold=cfg.models.confidence
+        confidence_thresh=cfg.models.confidence
     )
     detections = process_input(
         path=cfg.input.path,
         detector=detector,
-        proximity_thresh=cfg.threshold
+        proximity_thresh=cfg.models.proximity
     )
     with open(cfg.output.json, "w") as f:
         json.dump(detections, f, indent=2)

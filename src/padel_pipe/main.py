@@ -36,7 +36,7 @@ def cli(cfg: DictConfig):
     detections = process_input(
         path=work_input,
         detector=detector,
-        proximity_thresh=cfg.detect.threshold
+        proximity_thresh=cfg.models.proximity,
     )
 
     # Step 3: JSON export
