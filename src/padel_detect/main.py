@@ -4,7 +4,7 @@ from omegaconf import DictConfig
 from padel_detect import Detector
 from padel_detect import process_input
 
-@hydra.main(version_base="1.3", config_path="../../conf", config_name="padel_detect")
+@hydra.main(version_base="1.3", config_name="padel_detect")
 def cli(cfg: DictConfig):
     # cfg.input.path, cfg.output.json, cfg.threshold, cfg.models.pose, cfg.models.ball
     detector = Detector(

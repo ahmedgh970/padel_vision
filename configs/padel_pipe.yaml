@@ -1,5 +1,5 @@
 input:
-  path: experiments/raw_videos/test.mp4
+  path: experiments/images/pandeja.png #experiments/raw_videos/test.mp4
 preprocess:
   num_frames: 0     # skip by default
   start_sec: 0.0
@@ -11,5 +11,5 @@ output:
   csv: experiments/outputs/detections.csv
   annotated: experiments/outputs/annotated.mp4
 models:
-  pose: yolov11-pose.pt
-  ball: yolov11.pt
+  pose: yolo11n-pose.pt
+  ball: yolo11n.pt

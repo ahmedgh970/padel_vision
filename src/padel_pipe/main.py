@@ -8,8 +8,7 @@ from padel_detect import Detector, process_input
 from padel_preprocess import sample_frames_to_video
 from padel_pipe import annotate_video
 
-
-@hydra.main(version_base="1.3", config_path="../../conf", config_name="padel_pipe")
+@hydra.main(version_base="1.3", config_name="padel_pipe")
 def cli(cfg: DictConfig):
     """
     End-to-end PadelVision pipeline: optional sampling, detection, CSV/JSON export, annotated video

@@ -1,0 +1,9 @@
+input:
+  path: experiments/images/pandeja.png #experiments/raw_videos/test.mp4
+output:
+  json: experiments/outputs/pandeja_detections.json
+threshold: 50.0
+
+models:
+  pose: yolo11n-pose.pt
+  ball: yolo11n.pt

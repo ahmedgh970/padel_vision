@@ -2,7 +2,7 @@ import hydra
 from omegaconf import DictConfig
 from padel_preprocess import sample_frames_to_video
 
-@hydra.main(version_base="1.3", config_path="../../conf", config_name="padel_preprocess")
+@hydra.main(version_base="1.3", config_name="padel_preprocess")
 def cli(cfg: DictConfig):
     sample_frames_to_video(
         input_path=cfg.input.path,
