@@ -1,12 +1,11 @@
 input:
-  path: experiments/images/pandeja.png #experiments/raw_videos/test.mp4
+  path: experiments/prep_videos/test0_prep.mp4 #experiments/images/pandeja.png #
 
 output:
-  json: experiments/outputs/pandeja_detections.json
+  json: experiments/outputs/test0_prep_detections.json
   
-threshold: 200.0
-
 models:
   pose: yolo11n-pose.pt
   ball: yolo11n.pt
   confidence: 0.4
+  proximity: 0.2

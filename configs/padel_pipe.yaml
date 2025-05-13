@@ -1,20 +1,18 @@
 input:
   path: experiments/images/pandeja.png #experiments/raw_videos/test.mp4
-  
-preprocess:
-  num_frames: 0     # skip by default
-  start_sec: 0.0
-  end_sec: null
-
-detect:
-  threshold: 10.0
 
 output:
   json: experiments/outputs/detections.json
   csv: experiments/outputs/detections.csv
   annotated: experiments/outputs/annotated.mp4
 
+preprocess:
+  num_frames: 0     # skip by default
+  start_sec: 0.0
+  end_sec: null
+  
 models:
   pose: yolo11n-pose.pt
   ball: yolo11n.pt
   confidence: 0.4
+  proximity: 0.2
