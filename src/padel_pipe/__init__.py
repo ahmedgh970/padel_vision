@@ -1,1 +1,1 @@
-from .annotate import annotate_video
+from .annotate import annotate_and_save_frames

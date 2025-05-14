@@ -6,63 +6,51 @@ import hydra
 from omegaconf import DictConfig
 from padel_detect import Detector, process_input
 from padel_preprocess import sample_frames_to_video
-from padel_pipe import annotate_video
+from padel_pipe import annotate_and_save_frames
 
 @hydra.main(version_base="1.3", config_name="padel_pipe")
 def cli(cfg: DictConfig):
     """
     End-to-end PadelVision pipeline: optional sampling, detection, CSV/JSON export, annotated video
     """
-    # Step 1: Optional sampling
-    work_input = cfg.input.path
+    # Optional sampling
+    inpt_path = cfg.input.path
     temp_file = None
     if cfg.preprocess.num_frames > 0:
-        temp_file = tempfile.NamedTemporaryFile(suffix=os.path.splitext(work_input)[1], delete=False).name
+        temp_file = tempfile.NamedTemporaryFile(suffix=os.path.splitext(inpt_path)[1], delete=False).name
         sample_frames_to_video(
-            input_path=work_input,
+            input_path=inpt_path,
             output_path=temp_file,
             num_frames=cfg.preprocess.num_frames,
             start_sec=cfg.preprocess.start_sec,
             end_sec=cfg.preprocess.end_sec
         )
-        work_input = temp_file
+        inpt_path = temp_file
 
-    # Step 2: Detection
+    # Detection
     detector = Detector(
         pose_model_path=cfg.models.pose,
         ball_model_path=cfg.models.ball,
-        conf_threshold=cfg.models.confidence,
+        confidence_thresh=cfg.models.confidence,
     )
     detections = process_input(
-        path=work_input,
+        path=inpt_path,
         detector=detector,
         proximity_thresh=cfg.models.proximity,
     )
 
-    # Step 3: JSON export
+    # JSON export
     with open(cfg.output.json, 'w') as f:
         json.dump(detections, f, indent=2)
     print(f"JSON exported to {cfg.output.json}")
 
-    # Step 4: CSV export
-    with open(cfg.output.csv, 'w', newline='') as f:
-        writer = csv.writer(f)
-        writer.writerow(['frame_id', 'player_id', 'ball_x', 'ball_y'])
-        for fid, det in detections.items():
-            if det:
-                bx, by = det['ball']
-                writer.writerow([fid, det['player_id'], bx, by])
-    print(f"CSV exported to {cfg.output.csv}")
+    # Annotated and save detected frames
+    if cfg.output.annot_dir:
+        annotate_and_save_frames(inpt_path, detections, cfg.output.annot_dir)
+    print(f"Annotated frames saved to {cfg.output.annot_dir}")
 
-    # Step 5: Annotated video
-    if cfg.output.annotated:
-        annotate_video(work_input, detections, cfg.output.annotated)
-        print(f"Annotated video saved to {cfg.output.annotated}")
-
-    # Cleanup temp file
     if temp_file:
         os.remove(temp_file)
-
 
 if __name__ == '__main__':
     cli()
