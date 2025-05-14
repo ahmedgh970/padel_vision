@@ -3,8 +3,7 @@ input:
 
 output:
   json: experiments/outputs/detections.json
-  csv: experiments/outputs/detections.csv
-  annotated: experiments/outputs/annotated.mp4
+  annot_dir: experiments/outputs
 
 preprocess:
   num_frames: 0     # skip by default

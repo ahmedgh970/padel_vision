@@ -1,8 +1,8 @@
 input:
-  path: experiments/prep_videos/test0_prep.mp4 #experiments/images/pandeja.png #
+  path: experiments/images/pandeja.png #experiments/prep_videos/test0_prep.mp4 
 
 output:
-  json: experiments/outputs/test0_prep_detections.json
+  json: experiments/outputs/pandeja_detections.json
   
 models:
   pose: yolo11n-pose.pt
